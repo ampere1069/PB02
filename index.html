@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> 代辦事項清單 </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 標題區域 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid rgba(0, 0, 0, 0.1);
+            animation: fadeInDown 1s ease;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .ste-logo, .ste-name {
+            height: 70px;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s ease;
+        }
+        
+        .ste-logo:hover, .ste-name:hover {
+            transform: scale(1.05);
+        }
+        
+        .main-title {
+            text-align: center;
+            flex-grow: 1;
+        }
+        
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 900;
+            color: #1a365d;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, #f97316, #3b82f6, #10b981);
+            border-radius: 2px;
+        }
+        
+        /* 內容區域 */
+        .content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        /* 表格區域 */
+        .table-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideInLeft 1s ease;
+        }
+        
+        .table-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #1e40af;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #f97316;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: linear-gradient(90deg, #1e40af, #3b82f6);
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 700;
+            padding: 18px 15px;
+            text-align: left;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        td {
+            padding: 20px 15px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        
+        tr {
+            transition: all 0.3s ease;
+        }
+        
+        tr:hover {
+            background-color: #f0f9ff;
+            transform: scale(1.005);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .priority-p1 {
+            border-left: 6px solid #f97316;
+        }
+        
+        .priority-p2 {
+            border-left: 6px solid #3b82f6;
+        }
+        
+        .priority-p3 {
+            border-left: 6px solid #10b981;
+        }
+        
+        .priority {
+            font-weight: 900;
+            font-size: 1.4rem;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            text-align: center;
+            min-width: 60px;
+        }
+        
+        .p1 {
+            background-color: #ffedd5;
+            color: #9a3412;
+        }
+        
+        .p2 {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .p3 {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+        
+        /* 優先級標示區 */
+        .priority-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            padding: 12px 24px;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .priority-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+        }
+        
+        .priority-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+        }
+        
+        .color-p1 {
+            background-color: #f97316;
+        }
+        
+        .color-p2 {
+            background-color: #3b82f6;
+        }
+        
+        .color-p3 {
+            background-color: #10b981;
+        }
+        
+        /* 底部區域 */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 1s ease;
+        }
+        
+        /* 動畫效果 */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* 響應式設計 */
+        @media (max-width: 1024px) {
+            .table-section {
+                padding: 20px;
+            }
+            
+            th, td {
+                padding: 15px 12px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .logo-section {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .ste-logo, .ste-name {
+                height: 60px;
+            }
+            
+            th {
+                font-size: 1.3rem;
+                padding: 15px 10px;
+            }
+            
+            td {
+                font-size: 1.2rem;
+                padding: 15px 10px;
+            }
+            
+            .priority {
+                min-width: 50px;
+                padding: 6px 10px;
+            }
+            
+            .priority-indicators {
+                gap: 15px;
+            }
+            
+            .priority-item {
+                padding: 10px 18px;
+                font-size: 1.1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.6rem;
+            }
+            
+            th {
+                font-size: 1.2rem;
+                padding: 12px 8px;
+            }
+            
+            td {
+                font-size: 1.1rem;
+                padding: 12px 8px;
+            }
+            
+            .priority-indicators {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .priority-item {
+                width: 100%;
+                max-width: 250px;
+                justify-content: center;
+            }
+            
+            /* 調整表格在小螢幕上的顯示 */
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            
+            th, td {
+                min-width: 180px;
+            }
+            
+            th:nth-child(1), td:nth-child(1) {
+                min-width: 100px;
+            }
+        }
+        
+        /* 列印樣式 */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .container {
+                padding: 10px;
+                max-width: 100%;
+            }
+            
+            .header, .footer, .priority-indicators {
+                break-inside: avoid;
+            }
+            
+            .table-section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+            
+            tr {
+                break-inside: avoid;
+            }
+            
+            .priority-item {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 標題區域 -->
+        <header class="header">
+            <div class="logo-section">
+                <img src="https://i.urusai.cc/Qlsat.png" alt="STE LOGO" class="ste-logo">
+            </div>
+            <div class="main-title">
+                <h1>代辦事項清單</h1>
+            </div>
+            <div class="logo-section">
+                <img src="https://i.urusai.cc/GXiu2.png" alt="STE NAME" class="ste-name">
+            </div>
+        </header>
+        
+        <!-- 內容區域 -->
+        <main class="content">
+            <!-- 表格區域 -->
+            <section class="table-section">
+                <h2 class="section-title"><i class="fas fa-tasks"></i> 代辦清單項目</h2>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>優先級</th>
+                                <th>待辦清單項目</th>
+                                <th>交付成果 / 目標</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="priority-p1">
+                                <td><span class="priority p1">P1</span></td>
+                                <td>【文件與證據保全與平臺建制】<br>1. 指定檔案收集視窗<br>2. 完整保留展延成本憑證<br>3. 加速 NAS 合約檔檔案管理平臺建制</td>
+                                <td>1. 解決重要的檔案收集效率問題<br>2. 保障公司向業主追索費用的權利<br>3. 確保檔案管理符合總部稽核要求</td>
+                            </tr>
+                            <tr class="priority-p1">
+                                <td><span class="priority p1">P1</span></td>
+                                <td>【合約與分包商風險控制】<br>1. CBS 進版前取得分包商書面同意<br>2. 停止在無契約變更下主動調整 CBS</td>
+                                <td>1. 避免分包商索賠風險<br>2. 保護工期展延追索權：避免爾後爭議訴訟被視為我方主動同意延期</td>
+                            </tr>
+                            <tr class="priority-p2">
+                                <td><span class="priority p2">P2</span></td>
+                                <td>【合約策略與往來文件證據系統強化】<br>1. 確立 EOT/契約變更策略<br>2. 確保 NAS 平臺有效使用並收集重要文件檔案</td>
+                                <td>1. 解決管理層與執行層策略分歧<br>2. 擴大證據範疇，應對潛在仲裁與訴訟</td>
+                            </tr>
+                            <tr class="priority-p2">
+                                <td><span class="priority p2">P2</span></td>
+                                <td>【內部稽核預查】<br>完成合約文件管理平臺第一階段稽核查證</td>
+                                <td>在總部稽核前發現並修正主要缺失</td>
+                            </tr>
+                            <tr class="priority-p3">
+                                <td><span class="priority p3">P3</span></td>
+                                <td>【協力廠商稽核規劃】<br>規劃並執行協力廠商合約管理平臺與流程稽核</td>
+                                <td>驗證平臺完備性：提升公司風險控管專業形象</td>
+                            </tr>
+                            <tr class="priority-p3">
+                                <td><span class="priority p3">P3</span></td>
+                                <td>【專案來往發文檔案範本推廣】<br>確保所有專案經理使用合約法務提供的發文範本</td>
+                                <td>標準化發文品質與內容：提升文件有效性</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 優先級標示 -->
+                <div class="priority-indicators">
+                    <div class="priority-item">
+                        <div class="priority-color color-p1"></div>
+                        <span>P1 - 最高優先級（橙色）</span>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-color color-p2"></div>
+                        <span>P2 - 中等優先級（藍色）</span>
+                    </div>
+                    <div class="priority-item">
+                        <div class="priority-color color-p3"></div>
+                        <span>P3 - 一般優先級（綠色）</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+        
+        <!-- 底部區域（已移除品保部跨部門協作內容） -->
+        <footer class="footer">
+            <!-- 已移除品保部跨部門協作區塊 -->
+        </footer>
+    </div>
+
+    <script>
+        // 為表格行添加懸停效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const tableRows = document.querySelectorAll('tbody tr');
+            tableRows.forEach(row => {
+                row.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.005)';
+                    this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
+                });
+                
+                row.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+            
+            // 為優先級標示添加懸停效果
+            const priorityItems = document.querySelectorAll('.priority-item');
+            priorityItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                    this.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.12)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.08)';
+                });
+            });
+        });
+        
+        // 列印優化
+        window.onbeforeprint = function() {
+            document.body.classList.add('printing');
+        };
+        
+        window.onafterprint = function() {
+            document.body.classList.remove('printing');
+        };
+    </script>
+</body>
+</html>
